@@ -1,74 +1,143 @@
 <div #timelineBody class="col-md-12 game-timeline">
+	<div
+		#twitchEmbed
+		id="twitch-embed-{{ stage.index }}"
+		[hidden]="!showVod"
+	></div>
 
-    <div #twitchEmbed id="twitch-embed-{{ stage.index }}" [hidden]="!showVod">
-    </div>
-
-    <div class="game-timeline-content col-xs-8" style="
+	<div
+		class="game-timeline-content col-xs-8"
+		style="
             padding-left: 5px;
             padding-bottom: 15px;
             padding-right: 0;
             padding-top: 15px;
-        ">
-        <div *ngIf="isKOTH()" class="col-xs-12">
-            <div class="col-xs-2"></div>
-            <div class="timeline col-xs-9" style="height: 30px; padding:0px;">
-                <div *ngFor="let owner of stage.objectiveInfo.ownership" class="push-left hero-timeline-point timeline-owner-{{ owner.team }}"
-                        [style.width]="widthPercentage(owner) + '%'">
-                </div>
-            </div>
-            <strong class="col-xs-1 push-left text-left num" style="font-size: 13px;top: 24px;">K / D</strong>
-        </div>
-        <div *ngIf="!isKOTH()" class="col-xs-12">
-            <div class="col-xs-2"></div>
-            <div class="timeline col-xs-9" style="height: 30px;padding:0px;">
-                <div style="width: 100%; position: relative;">
-                    <div class="timeline col-xs-12" style="padding-top: 21px;">
-                        <div *ngFor="let event of pushingEvents(stage.events)" class="push-left timeline-pushing"
-                            [style.left]="x(event.start - stage.start) + '%'" [style.width]="pushingWidthPercentage(event) + '%'">
-                        </div>
-                    </div>
-                    <div *ngFor="let event of tickEvents(stage.events)" class="timeline-tick timeline-tick-{{ event.tick }} text-{{ stage.name == 'Attack' ? 'blue' : 'red' }} "
-                            [style.left]="x(event.time - stage.start) + '%'">
-                    </div>
-                    <div *ngFor="let checkpoint of stage.objectiveInfo.checkpoints" class="timeline-checkpoint timeline-owner-{{ checkpoint.team }}"
-                            [style.left]="eventLeft(checkpoint) + '%'">
-                            {{ checkpoint.checkpoint }}
-                    </div>
-                    <ng-container *ngFor="let checkpoint of stage.objectiveInfo.checkpoints">
-                        <div *ngIf="eventLeft(checkpoint) < 90" class="timeline-checkpoint-time timeline-checkpoint-ptime" 
-                            [style.left]="eventLeft(checkpoint) + '%'">
-                            {{ stageTime(checkpoint) }}
-                        </div>
-                    </ng-container>
-                    <div *ngIf="stage.formatProgress" class="timeline-final-progress">
-                        {{ stage.formatProgress }}
-                    </div>
-                </div>
-            </div>
-            <strong class="col-xs-1 text-left num" style="font-size: 13px;top: 24px;">K / D</strong>
-        </div>
-        <div class="timeline-players">
-        </div>
-    </div>
-    <div class="col-md-4">
-        <h2>Kill Feed</h2>
-        <div id="killfeed" class="killfeed killfeed-stage killfeed-{{ stage.index }}">
-            <table class="table table-striped text-center">
-                <tr *ngFor="let kill of stage.killfeed" class="timeline-event {{kill.id}}" [class.current]="highlightKill(kill, killfeedTime)">
-                    <td class="num">{{time(kill)}}</td>
-                    <td>
-                        <img *ngIf="kill.leftHero" class="heroicon" src="assets/images/heroes/{{kill.leftHero}}.png"/>
-                        <!-- <div *ngIf="kill.assists.length" class="assists">
+        "
+	>
+		<div *ngIf="isKOTH()" class="col-xs-12">
+			<div class="col-xs-2"></div>
+			<div class="timeline col-xs-9" style="height: 30px; padding:0px;">
+				<div
+					*ngFor="let owner of stage.objectiveInfo.ownership"
+					class="push-left hero-timeline-point timeline-owner-{{ owner.team }}"
+					[style.width]="widthPercentage(owner) + '%'"
+				></div>
+			</div>
+			<strong
+				class="col-xs-1 push-left text-left num"
+				style="font-size: 13px;top: 24px;"
+				>K / D</strong
+			>
+		</div>
+		<div *ngIf="!isKOTH()" class="col-xs-12">
+			<div class="col-xs-2"></div>
+			<div class="timeline col-xs-9" style="height: 30px;padding:0px;">
+				<div style="width: 100%; position: relative;">
+					<div class="timeline col-xs-12" style="padding-top: 21px;">
+						<div
+							*ngFor="let event of pushingEvents(stage.events)"
+							class="push-left timeline-pushing"
+							[style.left]="x(event.start - stage.start) + '%'"
+							[style.width]="pushingWidthPercentage(event) + '%'"
+						></div>
+					</div>
+					<div
+						*ngFor="let event of tickEvents(stage.events)"
+						class="timeline-tick timeline-tick-{{ event.tick }} text-{{
+							stage.name == 'Attack' ? 'blue' : 'red'
+						}} "
+						[style.left]="x(event.time - stage.start) + '%'"
+					></div>
+					<div
+						*ngFor="let checkpoint of stage.objectiveInfo.checkpoints"
+						class="timeline-checkpoint timeline-owner-{{ checkpoint.team }}"
+						[style.left]="eventLeft(checkpoint) + '%'"
+					>
+						{{ checkpoint.checkpoint }}
+					</div>
+					<ng-container
+						*ngFor="let checkpoint of stage.objectiveInfo.checkpoints"
+					>
+						<div
+							*ngIf="eventLeft(checkpoint) < 90"
+							class="timeline-checkpoint-time timeline-checkpoint-ptime"
+							[style.left]="eventLeft(checkpoint) + '%'"
+						>
+							{{ stageTime(checkpoint) }}
+						</div>
+					</ng-container>
+					<div *ngIf="stage.formatProgress" class="timeline-final-progress">
+						{{ stage.formatProgress }}
+					</div>
+				</div>
+			</div>
+			<strong class="col-xs-1 text-left num" style="font-size: 13px;top: 24px;"
+				>K / D</strong
+			>
+		</div>
+		<div class="timeline-players"></div>
+	</div>
+	<div class="col-md-4">
+		<h2>Kill Feed</h2>
+		<div
+			id="killfeed"
+			class="killfeed killfeed-stage killfeed-{{ stage.index }}"
+		>
+			<table class="table table-striped text-center">
+				<tr
+					*ngFor="let kill of stage.killfeed"
+					class="timeline-event {{ kill.id }}"
+					[class.current]="highlightKill(kill, killfeedTime)"
+				>
+					<td class="num">{{ time(kill) }}</td>
+					<td>
+						<img
+							*ngIf="kill.leftHero"
+							class="heroicon"
+							src="assets/images/heroes/{{ kill.leftHero }}.png"
+						/>
+						<!-- <div *ngIf="kill.assists.length" class="assists">
                             <img *ngFor="let assist of kill.assists" class="heroicon" src="assets/images/heroes/{{assist}}.png"/>
                         </div> -->
-                    </td>
-                    <td class="{{leftColor(kill)}} text-left {{tooLong(kill.leftPlayer)}}"><b>{{kill.leftPlayer}}</b></td>
-                    <td class="nofade" *ngIf="!kill.ability"><img class="killicon" *ngIf="kill.leftHero" src="assets/images/killicons/kill.png"/></td>
-                    <td class="nofade" *ngIf="kill.ability"><img class="killicon" *ngIf="kill.leftHero" src="assets/images/killicons/{{ kill.ability[0] }}.{{ kill.ability[1] }}.png"/></td>
-                    <td><img class="heroicon" src="assets/images/heroes/{{kill.rightHero}}.png"/></td>
-                    <td class="{{rightColor(kill)}} text-left {{tooLong(kill.rightPlayer)}}"><b>{{kill.rightPlayer}}</b></td>
-                </tr>
-            </table>
-        </div>
-    </div>
+					</td>
+					<td
+						class="{{ leftColor(kill) }} text-left {{
+							tooLong(kill.leftPlayer)
+						}}"
+					>
+						<b>{{ kill.leftPlayer }}</b>
+					</td>
+					<td class="nofade" *ngIf="!kill.ability">
+						<img
+							class="killicon"
+							*ngIf="kill.leftHero"
+							src="assets/images/killicons/kill.png"
+						/>
+					</td>
+					<td class="nofade" *ngIf="kill.ability">
+						<img
+							class="killicon"
+							*ngIf="kill.leftHero"
+							src="assets/images/killicons/{{ kill.ability[0] }}.{{
+								kill.ability[1]
+							}}.png"
+						/>
+					</td>
+					<td>
+						<img
+							class="heroicon"
+							src="assets/images/heroes/{{ kill.rightHero }}.png"
+						/>
+					</td>
+					<td
+						class="{{ rightColor(kill) }} text-left {{
+							tooLong(kill.rightPlayer)
+						}}"
+					>
+						<b>{{ kill.rightPlayer }}</b>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
 </div>

@@ -1,271 +1,482 @@
-
 <!--
     Overview
 -->
 <div class="jumbotron overview view banner eichenwalde">
-    <div class="container">                      
-        <div class="pull-right col-md-5" [style.visibility]="(player == 'Custom Games' || player == 'Quick Play') ? 'hidden' : 'visible'">
-               <div id="sr-graph"
-                    name="sr-graph"
-                    style="width: 100%; height: 175px; border-radius: 3px; overflow: hidden; background: rgba(0, 0, 0, 0.8)">
-            </div>
-        </div>
-        <h1>Games</h1>
-        <h2 *ngIf="player"> {{ player }} </h2>
-        <div style="margin-left:-15px; margin-top:-10px" *ngIf="player && player != 'Custom Games' && player != 'Quick Play'" class="col-md-3">
-            <div *ngIf="roleQueueEnabled" class="curr-sr role-queue">
-                <div>
-                    <div *ngIf="currentSR.tank">
-                        <img src="assets/images/roles/tank.svg">
-                        <span>{{currentSR.tank}}</span>
-                        <img src="assets/images/icons/{{rank(currentSR.tank)}}.png">
-                    </div>
-                    <div *ngIf="currentSR.damage">
-                        <img src="assets/images/roles/damage.svg">
-                        <span>{{currentSR.damage}}</span>
-                        <img src="assets/images/icons/{{rank(currentSR.damage)}}.png">
-                    </div>
-                    <div *ngIf="currentSR.support">
-                      <img src="assets/images/roles/support.svg">
-                      <span>{{currentSR.support}}</span>
-                      <img src="assets/images/icons/{{rank(currentSR.support)}}.png">
-                    </div>
-                </div>
-            </div>
-            <div *ngIf="!roleQueueEnabled" class="curr-sr">
-                <img src="assets/images/roles/flex.svg">
-                <span class="num">{{ currentSR.all}}</span>
-                <img src="assets/images/icons/{{rank(currentSR.all)}}.png" height="35" style="vertical-align: bottom">
-            </div>
-        </div>
-    </div>
+	<div class="container">
+		<div
+			class="pull-right col-md-5"
+			[style.visibility]="
+				player == 'Custom Games' || player == 'Quick Play'
+					? 'hidden'
+					: 'visible'
+			"
+		>
+			<div
+				id="sr-graph"
+				name="sr-graph"
+				style="width: 100%; height: 175px; border-radius: 3px; overflow: hidden; background: rgba(0, 0, 0, 0.8)"
+			></div>
+		</div>
+		<h1>Games</h1>
+		<h2 *ngIf="player">{{ player }}</h2>
+		<div
+			style="margin-left:-15px; margin-top:-10px"
+			*ngIf="player && player != 'Custom Games' && player != 'Quick Play'"
+			class="col-md-3"
+		>
+			<div *ngIf="roleQueueEnabled" class="curr-sr role-queue">
+				<div>
+					<div *ngIf="currentSR.tank">
+						<img src="assets/images/roles/tank.svg" />
+						<span>{{ currentSR.tank }}</span>
+						<img src="assets/images/icons/{{ rank(currentSR.tank) }}.png" />
+					</div>
+					<div *ngIf="currentSR.damage">
+						<img src="assets/images/roles/damage.svg" />
+						<span>{{ currentSR.damage }}</span>
+						<img src="assets/images/icons/{{ rank(currentSR.damage) }}.png" />
+					</div>
+					<div *ngIf="currentSR.support">
+						<img src="assets/images/roles/support.svg" />
+						<span>{{ currentSR.support }}</span>
+						<img src="assets/images/icons/{{ rank(currentSR.support) }}.png" />
+					</div>
+				</div>
+			</div>
+			<div *ngIf="!roleQueueEnabled" class="curr-sr">
+				<img src="assets/images/roles/flex.svg" />
+				<span class="num">{{ currentSR.all }}</span>
+				<img
+					src="assets/images/icons/{{ rank(currentSR.all) }}.png"
+					height="35"
+					style="vertical-align: bottom"
+				/>
+			</div>
+		</div>
+	</div>
 </div>
 
-<div class="container overview view" *ngIf="loaded && (currentUploadRequested || (gamesLists && gamesLists.length))">
-    <!-- <div class="col-md-12 alert alert-warning" role="alert">
+<div
+	class="container overview view"
+	*ngIf="
+		loaded && (currentUploadRequested || (gamesLists && gamesLists.length))
+	"
+>
+	<!-- <div class="col-md-12 alert alert-warning" role="alert">
         Blizzard's current stance on third party programs is unclear. Some third party programs with similar functionality to OverTrack have been forbidden.<br>
         You may wish to discontinue use of OverTrack until its legality is resolved. Get more details and keep up to date on this issue in the <a href="https://discord.gg/JywstAB">OverTrack Discord</a>
     </div> -->
 
-    <edit-game [game]="gameToEdit" [leaveOnDelete]="false" [allowRename]="false" ></edit-game>
-    <div class="row col-md-12">
-        <div class="panel panel-default control-panel">
-            <div class="panel-heading">
-                <div class="col-xs-6">
-                    <ng-multiselect-dropdown
-                        class="col-xs-6 season-selector"
-                        [data]="allSeasons"
-                        [(ngModel)]="visibleSeasons"
-                        [settings]="dropdownSettings"
+	<edit-game
+		[game]="gameToEdit"
+		[leaveOnDelete]="false"
+		[allowRename]="false"
+	></edit-game>
+	<div class="row col-md-12">
+		<div class="panel panel-default control-panel">
+			<div class="panel-heading">
+				<div class="col-xs-6">
+					<ng-multiselect-dropdown
+						class="col-xs-6 season-selector"
+						[data]="allSeasons"
+						[(ngModel)]="visibleSeasons"
+						[settings]="dropdownSettings"
+						(onSelect)="changeSeasonSelection($event)"
+						(onDeSelect)="changeSeasonSelection($event)"
+						(onDropDownClose)="closeDropdown($event)"
+					>
+					</ng-multiselect-dropdown>
 
-                        (onSelect)="changeSeasonSelection($event)"
-                        (onDeSelect)="changeSeasonSelection($event)"
-                        (onDropDownClose)="closeDropdown($event)"
-                      >
-                    </ng-multiselect-dropdown>
+					<div
+						*ngIf="roleQueueEnabled && player !== 'Custom Games'"
+						class="col-xs-6 btn-group btn-group-toggle toggle-buttons role-select"
+						data-toggle="buttons"
+					>
+						<label
+							*ngIf="numRolesPlayed > 1"
+							class="btn btn-primary{{ roleFilter === 'all' ? ' active' : '' }}"
+							(click)="setRoleFilter('all')"
+							title="All Roles"
+						>
+							<input
+								type="radio"
+								name="view-mode"
+								class="btn btn-primary"
+								id="all-roles-button"
+							/>
+							<img src="assets/images/roles/flex.svg" />
+						</label>
+						<label
+							*ngIf="playedTank"
+							class="btn btn-primary{{
+								roleFilter === 'tank' ? ' active' : ''
+							}}"
+							(click)="setRoleFilter('tank')"
+							title="Tank"
+						>
+							<input
+								type="radio"
+								name="view-mode"
+								class="btn btn-primary"
+								id="tank-role-button"
+							/>
+							<img src="assets/images/roles/tank.svg" />
+						</label>
+						<label
+							*ngIf="playedDamage"
+							class="btn btn-primary{{
+								roleFilter === 'damage' ? ' active' : ''
+							}}"
+							(click)="setRoleFilter('damage')"
+							title="Damage"
+						>
+							<input
+								type="radio"
+								name="view-mode"
+								class="btn btn-primary"
+								id="damage-role-button"
+							/>
+							<img src="assets/images/roles/damage.svg" />
+						</label>
+						<label
+							*ngIf="playedSupport"
+							class="btn btn-primary{{
+								roleFilter === 'support' ? ' active' : ''
+							}}"
+							(click)="setRoleFilter('support')"
+							title="Support"
+						>
+							<input
+								type="radio"
+								name="view-mode"
+								class="btn btn-primary"
+								id="support-role-button"
+							/>
+							<img src="assets/images/roles/support.svg" />
+						</label>
+					</div>
+				</div>
 
-                    <div *ngIf="roleQueueEnabled && player !== 'Custom Games'" class="col-xs-6 btn-group btn-group-toggle toggle-buttons role-select" data-toggle="buttons">
-                        <label
-                            *ngIf="numRolesPlayed > 1"
-                            class="btn btn-primary{{ roleFilter === 'all' ? ' active' : '' }}"
-                            (click)="setRoleFilter('all')"
-                            title="All Roles"
-                        >
-                            <input type="radio" name="view-mode" class="btn btn-primary" id="all-roles-button">
-                            <img src="assets/images/roles/flex.svg" />
-                        </label>
-                        <label
-                            *ngIf="playedTank"
-                            class="btn btn-primary{{ roleFilter === 'tank' ? ' active' : '' }}"
-                            (click)="setRoleFilter('tank')"
-                            title="Tank"
-                        >
-                            <input type="radio" name="view-mode" class="btn btn-primary" id="tank-role-button">
-                            <img src="assets/images/roles/tank.svg" />
-                        </label>
-                        <label
-                            *ngIf="playedDamage"
-                            class="btn btn-primary{{ roleFilter === 'damage' ? ' active' : '' }}"
-                            (click)="setRoleFilter('damage')"
-                            title="Damage"
-                        >
-                            <input type="radio" name="view-mode" class="btn btn-primary" id="damage-role-button">
-                            <img src="assets/images/roles/damage.svg" />
-                        </label>
-                        <label
-                            *ngIf="playedSupport"
-                            class="btn btn-primary{{ roleFilter === 'support' ? ' active' : '' }}"
-                            (click)="setRoleFilter('support')"
-                            title="Support"
-                        >
-                            <input type="radio" name="view-mode" class="btn btn-primary" id="support-role-button">
-                            <img src="assets/images/roles/support.svg" />
-                        </label>
-                    </div>
-                </div>
+				<div class="col-xs-6">
+					<div
+						class="btn-group btn-group-toggle pull-left toggle-buttons"
+						data-toggle="buttons"
+					>
+						<label
+							class="btn btn-primary{{ isCompactView ? '' : ' active' }}"
+							(click)="setIsCompact(false)"
+							title="Standard List View"
+						>
+							<input
+								type="radio"
+								name="view-mode"
+								class="btn btn-primary"
+								id="thick-button"
+							/>
+							<i class="glyphicon glyphicon-th-list"></i>
+						</label>
+						<label
+							class="btn btn-primary{{ isCompactView ? ' active' : '' }}"
+							(click)="setIsCompact(true)"
+							title="Compact List View"
+						>
+							<input
+								type="radio"
+								name="view-mode"
+								class="btn btn-primary"
+								id="compact-button"
+							/>
+							<i class="glyphicon glyphicon-list"></i>
+						</label>
+					</div>
 
-                <div class="col-xs-6">
-                    <div class="btn-group btn-group-toggle pull-left toggle-buttons" data-toggle="buttons">
-                        <label
-                            class="btn btn-primary{{ isCompactView ? '' : ' active' }}"
-                            (click)="setIsCompact(false)"
-                            title="Standard List View"
-                        >
-                            <input type="radio" name="view-mode" class="btn btn-primary" id="thick-button">
-                            <i class="glyphicon glyphicon-th-list"></i>
-                        </label>
-                        <label
-                            class="btn btn-primary{{ isCompactView ? ' active' : '' }}"
-                            (click)="setIsCompact(true)"
-                            title="Compact List View"
-                        >
-                            <input type="radio" name="view-mode" class="btn btn-primary" id="compact-button">
-                            <i class="glyphicon glyphicon-list"></i>
-                        </label>
-                    </div>
+					<share-links
+						*ngIf="isOwnGames"
+						[accounts]="accountNames"
+						class="pull-right"
+					></share-links>
+					<integrations
+						*ngIf="isOwnGames"
+						[accounts]="accountNames"
+						class="pull-right"
+					></integrations>
+					<button
+						*ngIf="isOwnGames"
+						class="btn btn-primary pull-right"
+						data-toggle="modal"
+						data-target="#batch-edit"
+					>
+						<span class="glyphicon glyphicon-pencil"></span>&nbsp; Batch Edit
+					</button>
 
-                    <share-links *ngIf="isOwnGames" [accounts]="accountNames" class="pull-right"></share-links>
-                    <integrations *ngIf="isOwnGames" [accounts]="accountNames" class="pull-right"></integrations>
-                    <button *ngIf="isOwnGames" class="btn btn-primary pull-right" data-toggle="modal" data-target="#batch-edit">
-                        <span class="glyphicon glyphicon-pencil"></span>&nbsp; Batch Edit
-                    </button>
+					<div
+						*ngIf="isOwnGames"
+						id="batch-edit"
+						class="modal fade bd-example-modal-sm"
+						tabindex="-1"
+						role="dialog"
+						aria-labelledby="mySmallModalLabel2"
+						aria-hidden="true"
+					>
+						<div class="modal-dialog modal-sm">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h4
+										class="modal-title"
+										id="mySmallModalLabel2"
+										style="display: inline"
+									>
+										Batch Edit
+									</h4>
+									<button
+										type="button"
+										class="close"
+										data-dismiss="modal"
+										aria-label="Close"
+									>
+										<span aria-hidden="true">×</span>
+									</button>
+								</div>
+								<div class="modal-body">
+									<div class="form-group row">
+										<label for="account-input" class="col-2 col-form-label"
+											>Account</label
+										>
+										<div class="col-10">
+											<select id="account-input" class="form-control">
+												<option *ngFor="let games of gamesLists">{{
+													games.player
+												}}</option>
+											</select>
+										</div>
+									</div>
 
-                    <div *ngIf="isOwnGames" id="batch-edit" class="modal fade bd-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel2" aria-hidden="true">
-                        <div class="modal-dialog modal-sm">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h4 class="modal-title" id="mySmallModalLabel2" style="display: inline">Batch Edit</h4>
-                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                    <span aria-hidden="true">×</span>
-                                    </button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="form-group row">
-                                        <label for="account-input" class="col-2 col-form-label">Account</label>
-                                        <div class="col-10">
-                                            <select id="account-input" class="form-control">
-                                                <option *ngFor="let games of gamesLists">{{ games.player }}</option>
-                                            </select>
-                                        </div>
-                                    </div>
+									<div class="form-group row">
+										<label for="playername-input" class="col-2 col-form-label"
+											>Player Name</label
+										>
+										<div
+											class="col-10"
+											style="background: red; border-radius: 4px;"
+										>
+											<input
+												class="form-control"
+												type="text"
+												value=""
+												id="playername-input"
+											/>
+										</div>
+									</div>
+									<div class="row">
+										<div class="col-lg-6" style="padding: 2px;">
+											<button
+												class="btn btn-danger"
+												(click)="batchEdit('delete')"
+											>
+												Delete
+											</button>
+										</div>
+										<div class="col-lg-6" style="padding: 2px;">
+											<button
+												class="btn btn-info pull-right"
+												style="margin-left: 83%"
+												(click)="batchEdit('rename')"
+											>
+												Rename
+											</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 
-                                    <div class="form-group row">
-                                        <label for="playername-input" class="col-2 col-form-label">Player Name</label>
-                                        <div class="col-10" style="background: red; border-radius: 4px;">
-                                            <input class="form-control" type="text" value="" id="playername-input">
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6" style="padding: 2px;">
-                                            <button class="btn btn-danger" (click)="batchEdit('delete')">
-                                                Delete
-                                            </button>
-                                        </div>
-                                        <div class="col-lg-6" style="padding: 2px;">
-                                            <button class="btn btn-info pull-right" style="margin-left: 83%" (click)="batchEdit('rename')">
-                                                Rename
-                                            </button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        
-        <div id="gametable" class="panel with-nav-tabs panel-default">
-            <div class="panel-heading">
-                <ul class="nav nav-tabs">
-                    <li class="{{ gamesLists && gamesLists.length > 1 ? '' : 'hidden' }}" ><b>Accounts:</b></li>
-                    <li 
-                        class="{{ gamesLists && gamesLists.length > 1 ? '' : 'hidden' }} {{f ? 'active' : ''}}" 
-                        *ngFor="let games of gamesLists; let f = first;"
-                    >
-                        <a 
-                            (click)="setSelectedPlayer(games.player)" 
-                            href="#{{ playerHref(games) }}" 
-                            data-toggle="tab">
-                                {{ games.player }}
-                            </a>
-                    </li>
-                </ul>
-            </div>
-            <div class="panel-body">
-                <div class="tab-content">
-                    <table class="table table-striped text-center{{ isCompactView ? ' compact' : '' }}">
-                        <tr *ngIf="currentUploadRequested && currentUserID == games.user_id">
-                            <td class="gn">{{formatTime(currentUploadRequested)}} {{ formatDay(currentUploadRequested) }}<br>
-                                {{formatDate(currentUploadRequested)}}
-                            </td>
-                            <td colspan="6" style="color:#808080">
-                                <p>Game uploading...</p>
-                            </td> 
-                        </tr>
-                        <tbody *ngFor="let gamesOfDay of gamesByDay" class="date-group">
-                            <tr class="date-row"><th colspan="9">{{gamesOfDay[0].listView.formatDate}}</th></tr>
-                            <tr style="width:100%">
-                                <th *ngIf="roleQueueEnabled && roleFilter === 'all'">Role</th>
-                                <th>Game Time</th>
-                                <th colspan="2">Win/Loss/Draw</th>
-                                <th>Score</th>
-                                <th *ngIf="!hideSR">Skill Rating</th>
-                                <th>Length</th>
-                                <th>Map</th>
-                                <th>Heroes</th>
-                            </tr>
-                            <tr *ngFor="let game of gamesOfDay; trackBy: myTrackByFunction"
-                                id="game-{{ game.num }}"
-                                class="list-game"
-                                [class.sub-required]="!game.viewable"
-                                [class.hoverable]="!game.error"
-                                (mousedown)="prepRoute(game, $event)"
-                                (mouseup)="route(game, $event)"
-                                data-toggle="popover"
-                                tabindex="0"
-                            >
-                                <p display="False" style="display: none;">
-                                    {{ game.key }}
-                                </p>
-                                <td *ngIf="roleQueueEnabled && roleFilter === 'all'" class="role-icon">
-                                    <img src="assets/images/roles/{{game.role || 'flex'}}.svg" />
-                                </td>
-                                <td class="gn">{{game.listView.formatTime}}</td>
-                                <td *ngIf="!game.error && !hideSR" class="{{game.listView.wltClass}} text-right num">
-                                    <b>{{ game.listView.srChange }}</b>
-                                </td>
-                                <td *ngIf="!game.error && hideSR"></td>
-                                <td *ngIf="!game.error" class="{{game.listView.wltClass}} text-left" >{{ game.result }}</td>
-                                <td *ngIf="!game.error"><span class="num">{{ game.blueScore }}</span>/<span class="num">{{ game.redScore }}</span></td>
-                                <td *ngIf="!game.error && game.rank == 'placement' && !game.endSR && !hideSR" class="num sr"><img src="assets/images/icons/placement.png"/><span>&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
-                                <td *ngIf="!game.error && (game.rank != 'placement' || game.endSR) && !hideSR" class="num sr"><img src="assets/images/icons/{{ game.listView.rank }}.png"/><span>{{ game.listView.formatSR }}</span></td>
-                                <td *ngIf="!game.error" class="time"><div class="num">{{ getFormattedDuration(game) }}</div></td>
-                                <td *ngIf="!game.error" class="map {{map(game)}}">
-                                    <div class="map-wrap">
-                                        <div class="map-bg bg"></div>
-                                        <div class="map-title">
-                                            <div class="map-title-bg bg"></div>
-                                            <i>{{ game.map }}</i>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td *ngIf="!game.error" class="hero" style="position: relative">
-                                    <img *ngFor="let hero of game.heroes" src="assets/images/heroes/{{hero.name}}.png"/>
-                                    <span *ngIf="isOwnGames" (mousedown)="edit(game, $event)" class="game-edit glyphicon glyphicon-pencil"></span>
-                                </td>
-                                <td *ngIf="game.error" colspan="2" class="{{game.listView.wltClass}} text-left">{{game.result}}</td>
-                                <td *ngIf="game.error" colspan="5" class="error-message text-error">
-                                    <p>Game uploaded but failed to process. This is a bug. Please report this with the following game key: </p>
-                                    <pre>{{ game.key }}</pre>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-    </div>
+		<div id="gametable" class="panel with-nav-tabs panel-default">
+			<div class="panel-heading">
+				<ul class="nav nav-tabs">
+					<li class="{{ gamesLists && gamesLists.length > 1 ? '' : 'hidden' }}">
+						<b>Accounts:</b>
+					</li>
+					<li
+						class="{{ gamesLists && gamesLists.length > 1 ? '' : 'hidden' }} {{
+							f ? 'active' : ''
+						}}"
+						*ngFor="let games of gamesLists; let f = first"
+					>
+						<a
+							(click)="setSelectedPlayer(games.player)"
+							href="#{{ playerHref(games) }}"
+							data-toggle="tab"
+						>
+							{{ games.player }}
+						</a>
+					</li>
+				</ul>
+			</div>
+			<div class="panel-body">
+				<div class="tab-content">
+					<table
+						class="table table-striped text-center{{
+							isCompactView ? ' compact' : ''
+						}}"
+					>
+						<tr
+							*ngIf="currentUploadRequested && currentUserID == games.user_id"
+						>
+							<td class="gn">
+								{{ formatTime(currentUploadRequested) }}
+								{{ formatDay(currentUploadRequested) }}<br />
+								{{ formatDate(currentUploadRequested) }}
+							</td>
+							<td colspan="6" style="color:#808080">
+								<p>Game uploading...</p>
+							</td>
+						</tr>
+						<tbody *ngFor="let gamesOfDay of gamesByDay" class="date-group">
+							<tr class="date-row">
+								<th colspan="9">
+									{{ gamesOfDay[0].listView.formatDate }}
+								</th>
+							</tr>
+							<tr style="width:100%">
+								<th *ngIf="roleQueueEnabled && roleFilter === 'all'">
+									Role
+								</th>
+								<th>Game Time</th>
+								<th colspan="2">Win/Loss/Draw</th>
+								<th>Score</th>
+								<th *ngIf="!hideSR">Skill Rating</th>
+								<th>Length</th>
+								<th>Map</th>
+								<th>Heroes</th>
+							</tr>
+							<tr
+								*ngFor="let game of gamesOfDay; trackBy: myTrackByFunction"
+								id="game-{{ game.num }}"
+								class="list-game"
+								[class.sub-required]="!game.viewable"
+								[class.hoverable]="!game.error"
+								(mousedown)="prepRoute(game, $event)"
+								(mouseup)="route(game, $event)"
+								data-toggle="popover"
+								tabindex="0"
+							>
+								<p display="False" style="display: none;">
+									{{ game.key }}
+								</p>
+								<td
+									*ngIf="roleQueueEnabled && roleFilter === 'all'"
+									class="role-icon"
+								>
+									<img
+										src="assets/images/roles/{{ game.role || 'flex' }}.svg"
+									/>
+								</td>
+								<td class="gn">
+									{{ game.listView.formatTime }}
+								</td>
+								<td
+									*ngIf="!game.error && !hideSR"
+									class="{{ game.listView.wltClass }} text-right num"
+								>
+									<b>{{ game.listView.srChange }}</b>
+								</td>
+								<td *ngIf="!game.error && hideSR"></td>
+								<td
+									*ngIf="!game.error"
+									class="{{ game.listView.wltClass }} text-left"
+								>
+									{{ game.result }}
+								</td>
+								<td *ngIf="!game.error">
+									<span class="num">{{ game.blueScore }}</span
+									>/<span class="num">{{ game.redScore }}</span>
+								</td>
+								<td
+									*ngIf="
+										!game.error &&
+										game.rank == 'placement' &&
+										!game.endSR &&
+										!hideSR
+									"
+									class="num sr"
+								>
+									<img src="assets/images/icons/placement.png" /><span
+										>&nbsp;&nbsp;&nbsp;&nbsp;</span
+									>
+								</td>
+								<td
+									*ngIf="
+										!game.error &&
+										(game.rank != 'placement' || game.endSR) &&
+										!hideSR
+									"
+									class="num sr"
+								>
+									<img
+										src="assets/images/icons/{{ game.listView.rank }}.png"
+									/><span>{{ game.listView.formatSR }}</span>
+								</td>
+								<td *ngIf="!game.error" class="time">
+									<div class="num">
+										{{ getFormattedDuration(game) }}
+									</div>
+								</td>
+								<td *ngIf="!game.error" class="map {{ map(game) }}">
+									<div class="map-wrap">
+										<div class="map-bg bg"></div>
+										<div class="map-title">
+											<div class="map-title-bg bg"></div>
+											<i>{{ game.map }}</i>
+										</div>
+									</div>
+								</td>
+								<td *ngIf="!game.error" class="hero" style="position: relative">
+									<img
+										*ngFor="let hero of game.heroes"
+										src="assets/images/heroes/{{ hero.name }}.png"
+									/>
+									<span
+										*ngIf="isOwnGames"
+										(mousedown)="edit(game, $event)"
+										class="game-edit glyphicon glyphicon-pencil"
+									></span>
+								</td>
+								<td
+									*ngIf="game.error"
+									colspan="2"
+									class="{{ game.listView.wltClass }} text-left"
+								>
+									{{ game.result }}
+								</td>
+								<td
+									*ngIf="game.error"
+									colspan="5"
+									class="error-message text-error"
+								>
+									<p>
+										Game uploaded but failed to process. This is a bug. Please
+										report this with the following game key:
+									</p>
+									<pre>{{ game.key }}</pre>
+								</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
-<install-instructions *ngIf="showUploadingGames && loaded && !currentUploadRequested && !(gamesLists && gamesLists.length)">
+<install-instructions
+	*ngIf="
+		showUploadingGames &&
+		loaded &&
+		!currentUploadRequested &&
+		!(gamesLists && gamesLists.length)
+	"
+>
 </install-instructions>

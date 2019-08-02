@@ -1,8 +1,19 @@
 <div id="tab-graphs" class="panel with-nav-tabs panel-default">
-    <div class="panel-heading">
-        <ul class="nav nav-tabs">
-            <li class="{{f ? 'active' : ''}}" *ngFor="let graph of graphNames; let f = first;"><a  data-toggle="tab" (click)="switchGraph(graph)">{{ toGraphName(graph) }}</a></li>
-        </ul>
-    </div>
-    <div class="tab-graph tab-pane active" id="graph" style="height: 540px;"></div>
+	<div class="panel-heading">
+		<ul class="nav nav-tabs">
+			<li
+				class="{{ f ? 'active' : '' }}"
+				*ngFor="let graph of graphNames; let f = first"
+			>
+				<a data-toggle="tab" (click)="switchGraph(graph)">{{
+					toGraphName(graph)
+				}}</a>
+			</li>
+		</ul>
+	</div>
+	<div
+		class="tab-graph tab-pane active"
+		id="graph"
+		style="height: 540px;"
+	></div>
 </div>

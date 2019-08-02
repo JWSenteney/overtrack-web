@@ -1,24 +1,32 @@
 <div class="jumbotron overview view banner route-66">
-    <div class="container">                      
-        <h1>Win Rates</h1>
-    </div>
+	<div class="container">
+		<h1>Win Rates</h1>
+	</div>
 </div>
 
-
 <div class="container overview view">
-
-    <div class="row col-md-12">
-        <div id="gametable" class="panel with-nav-tabs panel-default">
-            <div class="panel-heading">
-                <ul class="nav nav-tabs">
-                    <li [class.hidden]="!(gamesLists && gamesLists.length > 1)" ><b>Accounts:</b></li>
-                    <li [class.hidden]="!(gamesLists && gamesLists.length > 1)"
-						*ngFor="let games of gamesLists; let f = first;" [class.active]="f">
-						<a (click)="selectPlayer(games)" href="#{{ playerHref(games) }}" data-toggle="tab">{{ games.player }}</a>
+	<div class="row col-md-12">
+		<div id="gametable" class="panel with-nav-tabs panel-default">
+			<div class="panel-heading">
+				<ul class="nav nav-tabs">
+					<li [class.hidden]="!(gamesLists && gamesLists.length > 1)">
+						<b>Accounts:</b>
 					</li>
-                </ul>
-            </div>
-            <div class="tab-graph tab-pane active winrate-area" *ngIf="mapList">
+					<li
+						[class.hidden]="!(gamesLists && gamesLists.length > 1)"
+						*ngFor="let games of gamesLists; let f = first"
+						[class.active]="f"
+					>
+						<a
+							(click)="selectPlayer(games)"
+							href="#{{ playerHref(games) }}"
+							data-toggle="tab"
+							>{{ games.player }}</a
+						>
+					</li>
+				</ul>
+			</div>
+			<div class="tab-graph tab-pane active winrate-area" *ngIf="mapList">
 				<div class="row" style="padding-bottom: 20px;">
 					<!-- <ss-multiselect-dropdown 
 						class="col-lg-2"
@@ -37,95 +45,141 @@
 					</ng-multiselect-dropdown>
 					<div class="col-lg-10">
 						<div class="center">
-							<button class="multi-choice" *ngFor="let singleMap of mapList;"
+							<button
+								class="multi-choice"
+								*ngFor="let singleMap of mapList"
 								(click)="switchMap(singleMap)"
-								[class.active]="singleMap === activeMap">
-								{{singleMap}}
+								[class.active]="singleMap === activeMap"
+							>
+								{{ singleMap }}
 							</button>
 						</div>
 						<div class="center" *ngIf="mapList2" style="margin-top: -1px;">
-							<button class="multi-choice" *ngFor="let singleMap of mapList2;"
+							<button
+								class="multi-choice"
+								*ngFor="let singleMap of mapList2"
 								(click)="switchMap(singleMap)"
-								[class.active]="singleMap === activeMap">
-								{{singleMap}}
+								[class.active]="singleMap === activeMap"
+							>
+								{{ singleMap }}
 							</button>
 						</div>
 					</div>
 				</div>
-				
-				<h2 class="center">{{activeMap | uppercase}}</h2>
+
+				<h2 class="center">{{ activeMap | uppercase }}</h2>
 				<div class="center row" style="font-size: 16px; font-weight: bold;">
-					<div class="col-md-3">
-					</div>
+					<div class="col-md-3"></div>
 					<div class="col-xs-4 col-md-2 text-success">
-						WON<br>{{mapStats.get(activeMap).gamesWon}}
+						WON<br />{{ mapStats.get(activeMap).gamesWon }}
 					</div>
 					<div class="col-xs-4 col-md-2 text-warning">
-						TIED<br>{{mapStats.get(activeMap).gamesTied}}
+						TIED<br />{{ mapStats.get(activeMap).gamesTied }}
 					</div>
 					<div class="col-xs-4 col-md-2 text-danger">
-						LOST<br>{{mapStats.get(activeMap).gamesLost}}
+						LOST<br />{{ mapStats.get(activeMap).gamesLost }}
 					</div>
-					<div class="col-md-3">
-					</div>
+					<div class="col-md-3"></div>
 				</div>
-				
+
 				<div class="center" style="margin-top:15px;">
 					<button class="btn btn-sm btn-primary" (click)="toggleAllHeroes()">
-						{{showAllHeroes ? 'Hide Heroes with low playtime' : 'Show All Heroes'}}
+						{{
+							showAllHeroes
+								? "Hide Heroes with low playtime"
+								: "Show All Heroes"
+						}}
 					</button>
 				</div>
-			
+
 				<div class="row">
 					<div class="col-md-6">
 						<div class="center no-margin-top">
 							<h3>Winrate: {{ getWinrate() }}%</h3>
-							<label class="checkbox-inline" style="position: absolute; right: 20px; top: 20px; line-height: 12pt;"><input type="checkbox" [checked]="normalise" (click)="toggleNormalise()">Normalise<br> by playtime</label>
+							<label
+								class="checkbox-inline"
+								style="position: absolute; right: 20px; top: 20px; line-height: 12pt;"
+								><input
+									type="checkbox"
+									[checked]="normalise"
+									(click)="toggleNormalise()"
+								/>Normalise<br />
+								by playtime</label
+							>
 						</div>
-						
-						<div *ngFor="let nextName of sortedByWR(currentMapHeroes())"
-							class="hero-row" [class.hidden]="hideHero(nextName)">
-							<div class="hero-img">
-							</div>
+
+						<div
+							*ngFor="let nextName of sortedByWR(currentMapHeroes())"
+							class="hero-row"
+							[class.hidden]="hideHero(nextName)"
+						>
+							<div class="hero-img"></div>
 							<div class="progress">
-								<div class="progress-bar progress-bar-{{nextName}}" role="progressbar" valuemin="0" valuemax="100"
-									[style.width]="getHeroWinrate(nextName)+'%'">
-									<span class="hero-name">{{ toHeroName(nextName) | uppercase }}</span>
-									<span class="percentage">{{ getHeroWinrate(nextName).toFixed(2) }}%</span>
+								<div
+									class="progress-bar progress-bar-{{ nextName }}"
+									role="progressbar"
+									valuemin="0"
+									valuemax="100"
+									[style.width]="getHeroWinrate(nextName) + '%'"
+								>
+									<span class="hero-name">{{
+										toHeroName(nextName) | uppercase
+									}}</span>
+									<span class="percentage"
+										>{{ getHeroWinrate(nextName).toFixed(2) }}%</span
+									>
 								</div>
 							</div>
 						</div>
 					</div>
 					<div class="col-md-6">
 						<div class="center no-margin-top">
-							<h3>Time Played: {{formatTime(mapStats.get(activeMap).timeplayed)}}</h3>
+							<h3>
+								Time Played:
+								{{ formatTime(mapStats.get(activeMap).timeplayed) }}
+							</h3>
 						</div>
-						<div *ngFor="let nextName of sortedByPlaytime(currentMapHeroes())"
-							class="hero-row" [class.hidden]="hideHero(nextName)">
-							<div class="hero-img">
-							</div>
+						<div
+							*ngFor="let nextName of sortedByPlaytime(currentMapHeroes())"
+							class="hero-row"
+							[class.hidden]="hideHero(nextName)"
+						>
+							<div class="hero-img"></div>
 							<div class="progress">
-								<div class="progress-bar progress-bar-{{nextName}}" role="progressbar" valuemin="0" valuemax="100"
-									[style.width]="getHeroPlayrate(nextName)+'%'">
-									<span class="hero-name">{{ toHeroName(nextName) | uppercase }}</span>
-									<span class="percentage">{{formatTime(mapStats.get(activeMap).heroWinrates.get(nextName).timeplayed)}}</span>
+								<div
+									class="progress-bar progress-bar-{{ nextName }}"
+									role="progressbar"
+									valuemin="0"
+									valuemax="100"
+									[style.width]="getHeroPlayrate(nextName) + '%'"
+								>
+									<span class="hero-name">{{
+										toHeroName(nextName) | uppercase
+									}}</span>
+									<span class="percentage">{{
+										formatTime(
+											mapStats.get(activeMap).heroWinrates.get(nextName)
+												.timeplayed
+										)
+									}}</span>
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 
-				<br><br>
+				<br /><br />
 				<h4>Reading Winrates</h4>
 				<p>
-					When normalising by playtime, winrate is calculated as <i>time playing in games that were won</i> out of <i>total time played</i> for each hero.<br>
-					Without normalization, only games where the hero was played for more than 20% of the match are counted.<br>
+					When normalising by playtime, winrate is calculated as
+					<i>time playing in games that were won</i> out of
+					<i>total time played</i> for each hero.<br />
+					Without normalization, only games where the hero was played for more
+					than 20% of the match are counted.<br />
 				</p>
-
 			</div>
-        </div>
-    </div>
-	
-    <hr/>
+		</div>
+	</div>
 
+	<hr />
 </div>

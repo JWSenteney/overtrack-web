@@ -1,8 +1,7 @@
-import { Component } from '@angular/core';
+import { Component } from "@angular/core";
 
 @Component({
-    selector: 'streamer-info',
-    templateUrl: './streamer-info.component.html',
+	selector: "streamer-info",
+	templateUrl: "./streamer-info.component.html"
 })
-export class StreamerInfoComponent {
-}
+export class StreamerInfoComponent {}

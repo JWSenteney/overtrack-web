@@ -1,51 +1,89 @@
 <nav class="navbar navbar-inverse navbar-fixed-top">
-    <div class="container">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" routerLink="games">
-                <img src="favicon.png"> OverTrack
-            </a>
-        </div>
-        <div id="navbar" class="navbar-collapse collapse">
-            <ul class="nav navbar-nav" routerLinkActive="active">
+	<div class="container">
+		<div class="navbar-header">
+			<button
+				type="button"
+				class="navbar-toggle collapsed"
+				data-toggle="collapse"
+				data-target="#navbar"
+				aria-expanded="false"
+				aria-controls="navbar"
+			>
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" routerLink="games">
+				<img src="favicon.png" /> OverTrack
+			</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav" routerLinkActive="active">
+				<!-- TODO: make this nice -->
+				<li *ngIf="shareKey">
+					<a class="nav-link"
+						><b>{{ shareKey.split("-")[0] }}</b></a
+					>
+				</li>
 
-                <!-- TODO: make this nice -->
-                <li *ngIf="shareKey"><a class="nav-link"><b>{{ shareKey.split('-')[0] }}</b></a></li>
-
-                <li class="nav-item" [class.active]="router.isActive('/games', false)" routerLink="games{{ shareKeyFragment }}">
-                    <a class="nav-link" (click)="prevent($event)" href="/games">Games</a>
-                </li>
-                <li class="nav-item" [class.active]="router.isActive('/graph', false)" routerLink="graph{{ shareKeyFragment }}">
-                    <a class="nav-link" (click)="prevent($event)" href="/graph">SR Graph</a>
-                </li>
-                <li class="nav-item" [class.active]="router.isActive('/statistics', false)" routerLink="statistics{{ shareKeyFragment }}">
-                    <a class="nav-link" (click)="prevent($event)" href="/statistics">Statistics</a>
-                </li>
-                <li class="nav-item" [class.active]="router.isActive('/winrates', false)" routerLink="winrates{{ shareKeyFragment }}">
-                    <a class="nav-link" (click)="prevent($event)" href="/winrates">Win Rates</a>
-                </li>
-                 <li class="nav-item" [class.active]="router.isActive('/faq', false)" routerLink="faq">
-                        <a class="nav-link" (click)="prevent($event)" href="/faq">Help</a>
-                    </li>
-
-            
-
-            </ul>
-            <user-login></user-login>
-        </div>
-    </div>
+				<li
+					class="nav-item"
+					[class.active]="router.isActive('/games', false)"
+					routerLink="games{{ shareKeyFragment }}"
+				>
+					<a class="nav-link" (click)="prevent($event)" href="/games">Games</a>
+				</li>
+				<li
+					class="nav-item"
+					[class.active]="router.isActive('/graph', false)"
+					routerLink="graph{{ shareKeyFragment }}"
+				>
+					<a class="nav-link" (click)="prevent($event)" href="/graph"
+						>SR Graph</a
+					>
+				</li>
+				<li
+					class="nav-item"
+					[class.active]="router.isActive('/statistics', false)"
+					routerLink="statistics{{ shareKeyFragment }}"
+				>
+					<a class="nav-link" (click)="prevent($event)" href="/statistics"
+						>Statistics</a
+					>
+				</li>
+				<li
+					class="nav-item"
+					[class.active]="router.isActive('/winrates', false)"
+					routerLink="winrates{{ shareKeyFragment }}"
+				>
+					<a class="nav-link" (click)="prevent($event)" href="/winrates"
+						>Win Rates</a
+					>
+				</li>
+				<li
+					class="nav-item"
+					[class.active]="router.isActive('/faq', false)"
+					routerLink="faq"
+				>
+					<a class="nav-link" (click)="prevent($event)" href="/faq">Help</a>
+				</li>
+			</ul>
+			<user-login></user-login>
+		</div>
+	</div>
 </nav>
 
 <router-outlet></router-outlet>
 <div class="container footer-container">
-    <footer>
-        <hr>
-        <p class="pull-right text-right"><a href="https://discord.gg/JywstAB">Join Our Discord!</a> | <a href="https://github.com/synap5e/overtrack-web">Contribute on GitHub</a></p>
-        <p>&copy; 2017-2019, Simon Pinfold.</p>
-    </footer>
+	<footer>
+		<hr />
+		<p class="pull-right text-right">
+			<a href="https://discord.gg/JywstAB">Join Our Discord!</a> |
+			<a href="https://github.com/synap5e/overtrack-web"
+				>Contribute on GitHub</a
+			>
+		</p>
+		<p>&copy; 2017-2019, Simon Pinfold.</p>
+	</footer>
 </div>

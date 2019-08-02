@@ -1,188 +1,414 @@
-<div *ngIf="game" class="jumbotron game view banner {{mapClass()}}">
-    <div class="container">
-        <div class="pull-left col-lg-8">
-            <h1 class="mapname">{{game.map}}<small>{{ formatTime(game.startTime) }} {{ formatDay(game.startTime) }} {{formatDate(game.startTime) }}</small></h1>
-            <p><img src="/assets/images/{{game.mapType}}.svg" alt="{{game.mapType}}" class="maptype"> {{game.mapType}} <span class="glyphicon glyphicon-time" style="font-size:18px"> </span> {{displayGameTime()}} minutes</p>
-
-        </div>
-        <div class="pull-right col-lg-4">
-            <h1 class="text-right winloss"><span class="{{wltClass()}}">{{game.result == 'UNKN' ? 'Unknown' : game.result}}</span><small *ngIf="game.blueScore && game.redScore">{{game.blueScore}}/{{game.redScore}}</small></h1>
-            <p *ngIf="game.gameType == 'custom'" style="text-align: right">
-                Custom Game
-            </p>
-            <p *ngIf="game.gameType == 'quickplay'" style="text-align: right">
-                Quick Play
-            </p>
-            <p *ngIf="game.gameType == 'competitive' && game.placement && !game.endSR" style="text-align: right">
-                Placement
-            </p>
-            <p *ngIf="game.gameType == 'competitive' && (!game.placement || game.endSR)" style="text-align: right">
-                SR: {{ game.placement ? "-" : displaySR(game.startSR) }} → {{displaySR(game.endSR)}}<img src="assets/images/icons/{{rank(game.endSR)}}.png" height="35" style="vertical-align: bottom">({{ game.placement ? "Placement" : displaySRChange() }})
-            </p>
-        </div>
-    </div>
+<div *ngIf="game" class="jumbotron game view banner {{ mapClass() }}">
+	<div class="container">
+		<div class="pull-left col-lg-8">
+			<h1 class="mapname">
+				{{ game.map
+				}}<small
+					>{{ formatTime(game.startTime) }}
+					{{ formatDay(game.startTime) }}
+					{{ formatDate(game.startTime) }}</small
+				>
+			</h1>
+			<p>
+				<img
+					src="/assets/images/{{ game.mapType }}.svg"
+					alt="{{ game.mapType }}"
+					class="maptype"
+				/>
+				{{ game.mapType }}
+				<span class="glyphicon glyphicon-time" style="font-size:18px"> </span>
+				{{ displayGameTime() }} minutes
+			</p>
+		</div>
+		<div class="pull-right col-lg-4">
+			<h1 class="text-right winloss">
+				<span class="{{ wltClass() }}">{{
+					game.result == "UNKN" ? "Unknown" : game.result
+				}}</span
+				><small *ngIf="game.blueScore && game.redScore"
+					>{{ game.blueScore }}/{{ game.redScore }}</small
+				>
+			</h1>
+			<p *ngIf="game.gameType == 'custom'" style="text-align: right">
+				Custom Game
+			</p>
+			<p *ngIf="game.gameType == 'quickplay'" style="text-align: right">
+				Quick Play
+			</p>
+			<p
+				*ngIf="game.gameType == 'competitive' && game.placement && !game.endSR"
+				style="text-align: right"
+			>
+				Placement
+			</p>
+			<p
+				*ngIf="
+					game.gameType == 'competitive' && (!game.placement || game.endSR)
+				"
+				style="text-align: right"
+			>
+				SR: {{ game.placement ? "-" : displaySR(game.startSR) }} →
+				{{ displaySR(game.endSR)
+				}}<img
+					src="assets/images/icons/{{ rank(game.endSR) }}.png"
+					height="35"
+					style="vertical-align: bottom"
+				/>({{ game.placement ? "Placement" : displaySRChange() }})
+			</p>
+		</div>
+	</div>
 </div>
 
 <div *ngIf="game" class="container game view">
-    <div *ngIf="game.killfeedMissing" class="nokillfeed-warning row">
-        <div class="col-md-12 alert alert-danger" role="alert">
-                <h4>No kills tracked</h4>
-                Please make sure the killfeed is enabled and you are not using colorblind mode. <br/>
-                If you are using the standard killfeed and seeing this error frequenty please report this as a bug in the <a href="https://discord.gg/JywstAB">OverTrack Discord</a> 
-        </div>
-    </div>
-    <playlists *ngIf="game.playlists" [playlists]="game.playlists"></playlists>
-    <div class="row">
-        <div class="panel with-nav-tabs panel-default">
-            <div class="panel-heading">
-                <ul class="nav nav-tabs">
-                    <li><b>Stages:</b></li>
-                    <li class="{{f ? 'active' : ''}}" *ngFor="let stage of game.stages; let f = first;"><a (click)="changeTab(stage)" href="#{{ stageHref(stage) }}" data-toggle="tab">{{ stage.name }}</a></li>
-                    <li class="divider"> <!-- TODO: make this work --> </li>
-                </ul>
-            </div>
-            <div class="pull-right" style="height: 0px">
-                <button *ngIf="user?.id == game.userID || user?.superuser" style="top: -42px; left: -5px; position: relative; height: 37px; padding-top: 7px;" class="btn btn-primary" data-toggle="modal" data-target="#edit">
-                    <span class="glyphicon glyphicon-pencil"></span>&nbsp; Edit
-                </button>
-                <button *ngIf="game.twitch" style="top: -42px; left: -5px; position: relative; height: 37px; padding-top: 7px;" class="btn btn-primary" (click)="toggleVOD()" [class.active]="showVod">
-                    <span class="glyphicon glyphicon-play"></span>&nbsp; Show Interactive Video
-                </button>
-                <a *ngIf="game.twitch" href="{{ game.twitch }}" style="top: -42px; left: -5px; position: relative; height: 37px; padding-top: 7px; background-image: linear-gradient(#6441A5, #6441A5, 60%, #392E5C); background-color: transparent;" class="btn btn-primary">
-                    <span><img src="assets/images/badges/Glitch_White_RGB.png"></span>&nbsp; Watch on Twitch
-                </a>
-            </div>
-            <edit-game [game]="game" [leaveOnDelete]="true" [allowRename]="true"></edit-game>
-            <div class="panel-body">
-                <div class="tab-content">
-                    <timeline *ngFor="let stage of game.stages; let f = first;" class="tab-pane {{f ? 'active' : ''}}" id="{{ stageHref(stage) }}"
-                        [stage]="stage" [active]="stage == currentTab" [showVod]="showVod" [twitchURL]="game.twitch">
-                    </timeline>
-                    <div style="clear:both;"></div>
-                    <div class="panel panel-default">
-                        <div (click)="toggleTimelineKey()" id="timeline-key-header" class="panel-heading" style="cursor:pointer;text-align:center;"><h5>Key ▼</h5></div>
-                        <div [class.hidden]="hideTimelineKey" class="panel-body">
-                            <div class="col-md-3" style="padding-left: 10px; padding-right: 0px;">
-                                <h4>Player <br/><small>Kills</small></h4>
-                                <svg class="timeline-key"><text class="timeline-event kill" x="10" y="10">●</text></svg>Final Blow 
-                                <br/>
-                                <svg class="timeline-key"><image class="timeline-event death" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/timeline/skull.png" x="3" y="2" width="15" height="15"></image></svg>Death
-                                <br/>
-                                <svg class="timeline-key"><image class="timeline-event resurrect" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/timeline/res.png" x="3" y="2" width="15" height="15"></image></svg>Resurrected
-                            </div>
-                            <div class="col-md-3" style="padding-left: 0px; padding-right: 10px;">
-                                <h4>Non-hero<br/><small>e.g. Turret, D.Va Mech</small></h4>
-                                <svg class="timeline-key"><text class="timeline-event destruction" x="7" y="15">*</text></svg>Destroyed opposing non-hero<br/>
-                                <svg class="timeline-key"><image class="timeline-event destroyed" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/timeline/explosion.png" x="0" y="2" width="15" height="15"></image></svg>Player's non-hero destroyed
-                            </div>
-                            <div class="col-md-6" style="padding-left: 10px; padding-right: 10px;">
-                                <h4>Assists <br/><small>Contribution to a kill</small></h4>
-                                <svg class="timeline-key"><text class="timeline-event ability-assist" x="10" y="10">●</text></svg> General<small> - Assist shown in killfeed</small>
-                                <br/>
-                                <svg class="timeline-key"><text class="timeline-event assist" x="10" y="10">●</text></svg> Elimination<small> - Dealt damage toward kill</small>
-                                <br/>
-                                <svg class="timeline-key"><text class="timeline-event support-assist" x="10" y="10">●</text></svg> Support<small> e.g. discord, caduceus staff </small>
-                            </div>
-                            <div class="col-md-12">
-                                <h4>Heroes</h4>
-                                <svg width=100 height=40 style="vertical-align:middle;">
-                                <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/heroes/sombra.png" height=40 x=0 class="hero-image" y="0"></image>
-                                <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/heroes/pharah.png" height=40 x=25 class="hero-image" y="0"></image>
-                                <!--<image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/heroes/reinhardt.png" height=40 x=50 class="hero-image" y="0"></image>-->
-                                <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/heroes/zenyatta.png" height=40 x=50 class="hero-image" y="0"></image>
-                                </svg>
-                                <span style="line-height: 40px;vertical-align:middle;display: inline-block;">Switched to hero</span>
-                                
-                                <svg width=50 height=40 style="vertical-align:middle;">
-                                <image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/heroes/unknown.png" height=40 x=10 class="hero-image" y="0"></image>
-                                </svg>
-                                <span style="line-height: 40px;vertical-align:middle;display: inline-block;">Hero not seen</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="row">
-        <div class="col-md-6">
-            <div class="h2">
-                Statistics
-                <a *ngIf="!game.endGameStatistics" data-toggle="popover" data-trigger="hover" title="Endgame Statistics Not Captured" data-html="true" data-content="
+	<div *ngIf="game.killfeedMissing" class="nokillfeed-warning row">
+		<div class="col-md-12 alert alert-danger" role="alert">
+			<h4>No kills tracked</h4>
+			Please make sure the killfeed is enabled and you are not using colorblind
+			mode. <br />
+			If you are using the standard killfeed and seeing this error frequenty
+			please report this as a bug in the
+			<a href="https://discord.gg/JywstAB">OverTrack Discord</a>
+		</div>
+	</div>
+	<playlists *ngIf="game.playlists" [playlists]="game.playlists"></playlists>
+	<div class="row">
+		<div class="panel with-nav-tabs panel-default">
+			<div class="panel-heading">
+				<ul class="nav nav-tabs">
+					<li><b>Stages:</b></li>
+					<li
+						class="{{ f ? 'active' : '' }}"
+						*ngFor="let stage of game.stages; let f = first"
+					>
+						<a
+							(click)="changeTab(stage)"
+							href="#{{ stageHref(stage) }}"
+							data-toggle="tab"
+							>{{ stage.name }}</a
+						>
+					</li>
+					<li class="divider"><!-- TODO: make this work --></li>
+				</ul>
+			</div>
+			<div class="pull-right" style="height: 0px">
+				<button
+					*ngIf="user?.id == game.userID || user?.superuser"
+					style="top: -42px; left: -5px; position: relative; height: 37px; padding-top: 7px;"
+					class="btn btn-primary"
+					data-toggle="modal"
+					data-target="#edit"
+				>
+					<span class="glyphicon glyphicon-pencil"></span>&nbsp; Edit
+				</button>
+				<button
+					*ngIf="game.twitch"
+					style="top: -42px; left: -5px; position: relative; height: 37px; padding-top: 7px;"
+					class="btn btn-primary"
+					(click)="toggleVOD()"
+					[class.active]="showVod"
+				>
+					<span class="glyphicon glyphicon-play"></span>&nbsp; Show Interactive
+					Video
+				</button>
+				<a
+					*ngIf="game.twitch"
+					href="{{ game.twitch }}"
+					style="top: -42px; left: -5px; position: relative; height: 37px; padding-top: 7px; background-image: linear-gradient(#6441A5, #6441A5, 60%, #392E5C); background-color: transparent;"
+					class="btn btn-primary"
+				>
+					<span><img src="assets/images/badges/Glitch_White_RGB.png"/></span
+					>&nbsp; Watch on Twitch
+				</a>
+			</div>
+			<edit-game
+				[game]="game"
+				[leaveOnDelete]="true"
+				[allowRename]="true"
+			></edit-game>
+			<div class="panel-body">
+				<div class="tab-content">
+					<timeline
+						*ngFor="let stage of game.stages; let f = first"
+						class="tab-pane {{ f ? 'active' : '' }}"
+						id="{{ stageHref(stage) }}"
+						[stage]="stage"
+						[active]="stage == currentTab"
+						[showVod]="showVod"
+						[twitchURL]="game.twitch"
+					>
+					</timeline>
+					<div style="clear:both;"></div>
+					<div class="panel panel-default">
+						<div
+							(click)="toggleTimelineKey()"
+							id="timeline-key-header"
+							class="panel-heading"
+							style="cursor:pointer;text-align:center;"
+						>
+							<h5>Key ▼</h5>
+						</div>
+						<div [class.hidden]="hideTimelineKey" class="panel-body">
+							<div
+								class="col-md-3"
+								style="padding-left: 10px; padding-right: 0px;"
+							>
+								<h4>Player <br /><small>Kills</small></h4>
+								<svg class="timeline-key">
+									<text class="timeline-event kill" x="10" y="10">
+										●
+									</text></svg
+								>Final Blow
+								<br />
+								<svg class="timeline-key">
+									<image
+										class="timeline-event death"
+										xmlns:xlink="http://www.w3.org/1999/xlink"
+										xlink:href="assets/images/timeline/skull.png"
+										x="3"
+										y="2"
+										width="15"
+										height="15"
+									></image></svg
+								>Death
+								<br />
+								<svg class="timeline-key">
+									<image
+										class="timeline-event resurrect"
+										xmlns:xlink="http://www.w3.org/1999/xlink"
+										xlink:href="assets/images/timeline/res.png"
+										x="3"
+										y="2"
+										width="15"
+										height="15"
+									></image></svg
+								>Resurrected
+							</div>
+							<div
+								class="col-md-3"
+								style="padding-left: 0px; padding-right: 10px;"
+							>
+								<h4>Non-hero<br /><small>e.g. Turret, D.Va Mech</small></h4>
+								<svg class="timeline-key">
+									<text class="timeline-event destruction" x="7" y="15">
+										*
+									</text></svg
+								>Destroyed opposing non-hero<br />
+								<svg class="timeline-key">
+									<image
+										class="timeline-event destroyed"
+										xmlns:xlink="http://www.w3.org/1999/xlink"
+										xlink:href="assets/images/timeline/explosion.png"
+										x="0"
+										y="2"
+										width="15"
+										height="15"
+									></image></svg
+								>Player's non-hero destroyed
+							</div>
+							<div
+								class="col-md-6"
+								style="padding-left: 10px; padding-right: 10px;"
+							>
+								<h4>Assists <br /><small>Contribution to a kill</small></h4>
+								<svg class="timeline-key">
+									<text class="timeline-event ability-assist" x="10" y="10">
+										●
+									</text>
+								</svg>
+								General<small> - Assist shown in killfeed</small>
+								<br />
+								<svg class="timeline-key">
+									<text class="timeline-event assist" x="10" y="10">
+										●
+									</text>
+								</svg>
+								Elimination<small> - Dealt damage toward kill</small>
+								<br />
+								<svg class="timeline-key">
+									<text class="timeline-event support-assist" x="10" y="10">
+										●
+									</text>
+								</svg>
+								Support<small>
+									e.g. discord, caduceus staff
+								</small>
+							</div>
+							<div class="col-md-12">
+								<h4>Heroes</h4>
+								<svg width="100" height="40" style="vertical-align:middle;">
+									<image
+										xmlns:xlink="http://www.w3.org/1999/xlink"
+										xlink:href="assets/images/heroes/sombra.png"
+										height="40"
+										x="0"
+										class="hero-image"
+										y="0"
+									></image>
+									<image
+										xmlns:xlink="http://www.w3.org/1999/xlink"
+										xlink:href="assets/images/heroes/pharah.png"
+										height="40"
+										x="25"
+										class="hero-image"
+										y="0"
+									></image>
+									<!--<image xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="assets/images/heroes/reinhardt.png" height=40 x=50 class="hero-image" y="0"></image>-->
+									<image
+										xmlns:xlink="http://www.w3.org/1999/xlink"
+										xlink:href="assets/images/heroes/zenyatta.png"
+										height="40"
+										x="50"
+										class="hero-image"
+										y="0"
+									></image>
+								</svg>
+								<span
+									style="line-height: 40px;vertical-align:middle;display: inline-block;"
+									>Switched to hero</span
+								>
+
+								<svg width="50" height="40" style="vertical-align:middle;">
+									<image
+										xmlns:xlink="http://www.w3.org/1999/xlink"
+										xlink:href="assets/images/heroes/unknown.png"
+										height="40"
+										x="10"
+										class="hero-image"
+										y="0"
+									></image>
+								</svg>
+								<span
+									style="line-height: 40px;vertical-align:middle;display: inline-block;"
+									>Hero not seen</span
+								>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="h2">
+				Statistics
+				<a
+					*ngIf="!game.endGameStatistics"
+					data-toggle="popover"
+					data-trigger="hover"
+					title="Endgame Statistics Not Captured"
+					data-html="true"
+					data-content="
                     OverTrack was not able to record endgame statistics.<br/>
                     For best quality statistics, please stay in game until the endgame stats screens have displayed."
-                >
-                    <span class="glyphicon glyphicon-warning-sign" style="
+				>
+					<span
+						class="glyphicon glyphicon-warning-sign"
+						style="
                         font-size: 25px;
                         margin-left: 10px;
                         color: orange;
-                    "></span>
-                </a>
-            </div>
-            <tab-stats *ngIf="game.tabStatistics || (game.endGameStatistics && game.heroPlayed)"
-                [heroStatistics]="game.heroStatistics"
-                [endgameStatistics]="game.endGameStatistics"
-                [heroPlayed]="game.heroPlayed">
-            </tab-stats>
-        </div>
-        <div class="col-md-6">
-            <ng-container>
-                <div class="h2">
-                        Teams
-                        <a *ngIf="!game.teams" data-toggle="popover" data-trigger="hover" title="Player List Not Captured" data-html="true" data-content="
+                    "
+					></span>
+				</a>
+			</div>
+			<tab-stats
+				*ngIf="
+					game.tabStatistics || (game.endGameStatistics && game.heroPlayed)
+				"
+				[heroStatistics]="game.heroStatistics"
+				[endgameStatistics]="game.endGameStatistics"
+				[heroPlayed]="game.heroPlayed"
+			>
+			</tab-stats>
+		</div>
+		<div class="col-md-6">
+			<ng-container>
+				<div class="h2">
+					Teams
+					<a
+						*ngIf="!game.teams"
+						data-toggle="popover"
+						data-trigger="hover"
+						title="Player List Not Captured"
+						data-html="true"
+						data-content="
                             OverTrack was not able to record the player list.<br/>
                             For more accurate and complete data please ensure you are tabbed-in to Overwatch when the game starts or are using OBS capture mode."
-                        >
-                            <span class="glyphicon glyphicon-warning-sign" style="
+					>
+						<span
+							class="glyphicon glyphicon-warning-sign"
+							style="
                                 font-size: 25px;
                                 margin-left: 10px;
                                 color: orange;
-                            "></span>
-                        </a>
-                    </div>
-                <div *ngIf="game.teams" class="panel panel-default row">
-                    <div class="col-md-6">
-                        <table class="table team-table text-blue">
-                            <tr>
-                                <th></th>
-                                <th>{{ game.teams.blueAvgSR || " " }}</th>
-                            </tr>
-                            <tr *ngFor="let i of [0, 1, 2, 3, 4, 5]">
-                                <td class="text-{{ i < game.groupSize ? 'green' : 'blue' }}" style="vertical-align: middle;"><b>{{ game.teams.blue[i].name }}</b></td>
-                                <td>
-                                    <img src="assets/images/icons/{{ game.teams.blue[i].rank }}.png" height="35" style="vertical-align: bottom">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                    <div class="col-md-6">
-                        <table class="table team-table text-red">
-                            <tr>
-                                <th></th>
-                                <th>{{ game.teams.redAvgSR || " " }}</th>
-                            </tr>
-                            <tr *ngFor="let i of [0, 1, 2, 3, 4, 5]">
-                                <td style="vertical-align: middle;"><b>{{ game.teams.red[i].name }}</b></td>
-                                <td>
-                                    <img src="assets/images/icons/{{ game.teams.red[i].rank }}.png" height="35" style="vertical-align: bottom">
-                                </td>
-                            </tr>
-                        </table>
-                    </div>
-                </div>
-            </ng-container>
-        </div>
-    </div>
+                            "
+						></span>
+					</a>
+				</div>
+				<div *ngIf="game.teams" class="panel panel-default row">
+					<div class="col-md-6">
+						<table class="table team-table text-blue">
+							<tr>
+								<th></th>
+								<th>{{ game.teams.blueAvgSR || " " }}</th>
+							</tr>
+							<tr *ngFor="let i of [0, 1, 2, 3, 4, 5]">
+								<td
+									class="text-{{ i < game.groupSize ? 'green' : 'blue' }}"
+									style="vertical-align: middle;"
+								>
+									<b>{{ game.teams.blue[i].name }}</b>
+								</td>
+								<td>
+									<img
+										src="assets/images/icons/{{ game.teams.blue[i].rank }}.png"
+										height="35"
+										style="vertical-align: bottom"
+									/>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<div class="col-md-6">
+						<table class="table team-table text-red">
+							<tr>
+								<th></th>
+								<th>{{ game.teams.redAvgSR || " " }}</th>
+							</tr>
+							<tr *ngFor="let i of [0, 1, 2, 3, 4, 5]">
+								<td style="vertical-align: middle;">
+									<b>{{ game.teams.red[i].name }}</b>
+								</td>
+								<td>
+									<img
+										src="assets/images/icons/{{ game.teams.red[i].rank }}.png"
+										height="35"
+										style="vertical-align: bottom"
+									/>
+								</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</ng-container>
+		</div>
+	</div>
 
-    <div class="row" *ngIf="game.tabStatistics && game.tabStatistics.hero && game.tabStatistics.hero.length > 4">
-         <div class="col-md-12">
-            <h2>Graphs</h2>
-            <tab-graphs
-                [tabStatistics]="game.tabStatistics"
-                [stages]="game.stages">
-            </tab-graphs>
-        </div>
-    </div>
+	<div
+		class="row"
+		*ngIf="
+			game.tabStatistics &&
+			game.tabStatistics.hero &&
+			game.tabStatistics.hero.length > 4
+		"
+	>
+		<div class="col-md-12">
+			<h2>Graphs</h2>
+			<tab-graphs [tabStatistics]="game.tabStatistics" [stages]="game.stages">
+			</tab-graphs>
+		</div>
+	</div>
 
-    <metagame *ngIf="user?.superuser" [id]="game.key"></metagame>
+	<metagame *ngIf="user?.superuser" [id]="game.key"></metagame>
 </div>

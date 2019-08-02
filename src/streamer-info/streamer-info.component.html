@@ -1,80 +1,117 @@
 <div class="jumbotron overview view banner junkertown">
-    <div class="container">                      
-        <h1>Streamer Info</h1>
-    </div>
+	<div class="container">
+		<h1>Streamer Info</h1>
+	</div>
 </div>
 
 <div class="container">
-<div style="max-width: 750px;">
-    <p>
-        If you are a streamer or content creator you may wish to use some of OverTrack’s integrations as additional ways for your viewers to engage with your stream.
-    </p>
+	<div style="max-width: 750px;">
+		<p>
+			If you are a streamer or content creator you may wish to use some of
+			OverTrack’s integrations as additional ways for your viewers to engage
+			with your stream.
+		</p>
 
-    <p>
-    With OverTrack you can create chat commands that allow your viewers to request information from your most recent matches.
-    OverTrack also offers a twitch bot and a discord bot which can post each match you have completed to a discord channel.
-    </p>
+		<p>
+			With OverTrack you can create chat commands that allow your viewers to
+			request information from your most recent matches. OverTrack also offers a
+			twitch bot and a discord bot which can post each match you have completed
+			to a discord channel.
+		</p>
 
-    <br/>
-    <h3>Twitch Bot</h3>
-    <p>
-       Link your twitch account in the "Integrations" panel on your games list and enable the twitch bot to post after your matches. Additionally this will let you use your twitch account name as a share link (enable this in the "Share Links" panel).
-    </p>
+		<br />
+		<h3>Twitch Bot</h3>
+		<p>
+			Link your twitch account in the "Integrations" panel on your games list
+			and enable the twitch bot to post after your matches. Additionally this
+			will let you use your twitch account name as a share link (enable this in
+			the "Share Links" panel).
+		</p>
 
-    <br/>
-    <h3>Bot commands</h3>
-    <p>
-        OverTrack can be used to provide details about your games using chat commands. Currently, the supported commands are:
-    </p>
-    <ul>
-        <li>Current SR</li>
-        <li>Last Match</li>
-        <li>Session</li>
-    </ul>
-    <p>
-        To use these commands you will need a bot that supports fetching from a URL.<br/>
-        For Nightbot this is the <code>$(urlfetch ...)</code> syntax and for Ankhbot <code>$readapi(...)</code>.<br/>
-        You will need to configure your bot to respond to a command of your choice using the content from one of OverTrack's bot APIs.<br/>
-    </p>
+		<br />
+		<h3>Bot commands</h3>
+		<p>
+			OverTrack can be used to provide details about your games using chat
+			commands. Currently, the supported commands are:
+		</p>
+		<ul>
+			<li>Current SR</li>
+			<li>Last Match</li>
+			<li>Session</li>
+		</ul>
+		<p>
+			To use these commands you will need a bot that supports fetching from a
+			URL.<br />
+			For Nightbot this is the <code>$(urlfetch ...)</code> syntax and for
+			Ankhbot <code>$readapi(...)</code>.<br />
+			You will need to configure your bot to respond to a command of your choice
+			using the content from one of OverTrack's bot APIs.<br />
+		</p>
 
-    <br/>
-    <br/>
-    <h4>Current SR</h4>
-    To retrieve current SR use the endpoint <code>https://api.overtrack.gg/sr/&lt;share key&gt;</code>.<br/>
-    For example if your share link is <a href="https://overtrack.gg/games/SHAREKEY123">https://overtrack.gg/games/SHAREKEY123</a> then your share key is <code>SHAREKEY123</code>, so your SR endpoint is <code>https://api.overtrack.gg/sr/SHAREKEY123</code>.<br/><br/>
-    
-    Create a bot command and set the text to include the response from this URL. For Nightbot such a command would look like:<br/>
-    <img class="tut-image" src="assets/images/streamer/sr.png"><br/><br/>
+		<br />
+		<br />
+		<h4>Current SR</h4>
+		To retrieve current SR use the endpoint
+		<code>https://api.overtrack.gg/sr/&lt;share key&gt;</code>.<br />
+		For example if your share link is
+		<a href="https://overtrack.gg/games/SHAREKEY123"
+			>https://overtrack.gg/games/SHAREKEY123</a
+		>
+		then your share key is <code>SHAREKEY123</code>, so your SR endpoint is
+		<code>https://api.overtrack.gg/sr/SHAREKEY123</code>.<br /><br />
 
-    This command will return the SR of your most recent game. e.g. <br/>
-    <img class="tut-image" src="assets/images/streamer/sr2.png"> <br/><br/>
-    
-    If you use multiple accounts and would like this command to return separate SRs for each account you can add<br/>
-    <code>?multiple_accounts=true</code> to the end of the URL (so it becomes <code>https://api.overtrack.gg/sr/&lt;share key&gt;?multiple_accounts=true</code>) and OverTrack will return the SR 
-    (if known) for all accounts with recently played games:<br/>
-    <img class="tut-image" src="assets/images/streamer/sr3.png"> <br/><br/>
+		Create a bot command and set the text to include the response from this URL.
+		For Nightbot such a command would look like:<br />
+		<img class="tut-image" src="assets/images/streamer/sr.png" /><br /><br />
 
-    For these examples I have used <code>!sr</code>, but you may wish to use a different command, as <code>!sr</code> may be confused with song requests.<br/>
+		This command will return the SR of your most recent game. e.g. <br />
+		<img class="tut-image" src="assets/images/streamer/sr2.png" />
+		<br /><br />
 
-    <br/>
-    <h4>Last Match</h4>
-    To retrieve a description of the last match tracked use the endpoint <code>https://api.overtrack.gg/last_match/&lt;share key&gt;</code>.<br/>
-    This endpoint will describe the result, map, SR, and a link to the game. e.g. <br/>
-    <img class="tut-image" src="assets/images/streamer/lastmatch.png"> <br/><br/>
+		If you use multiple accounts and would like this command to return separate
+		SRs for each account you can add<br />
+		<code>?multiple_accounts=true</code> to the end of the URL (so it becomes
+		<code
+			>https://api.overtrack.gg/sr/&lt;share
+			key&gt;?multiple_accounts=true</code
+		>) and OverTrack will return the SR (if known) for all accounts with
+		recently played games:<br />
+		<img class="tut-image" src="assets/images/streamer/sr3.png" />
+		<br /><br />
 
-    If you would like the link to point to your games list instead of the specific game, you can add <code>?game_link=false</code> to the URL used.<br/>
-    This will change the game link to be a link to all games visible from your share link. e.g. <br/>
-    <img class="tut-image" src="assets/images/streamer/lastmatch2.png"> <br/>
-    This second option may be desirable if you are not a Twitch partner and are not subscribed to OverTrack (as in this case full game details would not be supported).<br/><br/>
+		For these examples I have used <code>!sr</code>, but you may wish to use a
+		different command, as <code>!sr</code> may be confused with song
+		requests.<br />
 
-    <h4>Session</h4>
-    To retrieve a summary of the wins, losses, and draws along with SR change of your current session of tames use the endpoint <code>https://api.overtrack.gg/current_session/&lt;share key&gt;</code>.<br/>
+		<br />
+		<h4>Last Match</h4>
+		To retrieve a description of the last match tracked use the endpoint
+		<code>https://api.overtrack.gg/last_match/&lt;share key&gt;</code>.<br />
+		This endpoint will describe the result, map, SR, and a link to the game.
+		e.g. <br />
+		<img class="tut-image" src="assets/images/streamer/lastmatch.png" />
+		<br /><br />
 
-    <br/><br/>
+		If you would like the link to point to your games list instead of the
+		specific game, you can add <code>?game_link=false</code> to the URL used.<br />
+		This will change the game link to be a link to all games visible from your
+		share link. e.g. <br />
+		<img class="tut-image" src="assets/images/streamer/lastmatch2.png" />
+		<br />
+		This second option may be desirable if you are not a Twitch partner and are
+		not subscribed to OverTrack (as in this case full game details would not be
+		supported).<br /><br />
 
-    If you have any issues, queries or suggestions regarding twitch bot support, don't hesitate to get in touch through <a href="https://discord.gg/JywstAB">Discord</a>.<br/>
+		<h4>Session</h4>
+		To retrieve a summary of the wins, losses, and draws along with SR change of
+		your current session of tames use the endpoint
+		<code>https://api.overtrack.gg/current_session/&lt;share key&gt;</code
+		>.<br />
 
+		<br /><br />
 
-
-</div>
+		If you have any issues, queries or suggestions regarding twitch bot support,
+		don't hesitate to get in touch through
+		<a href="https://discord.gg/JywstAB">Discord</a>.<br />
+	</div>
 </div>

@@ -2,19 +2,19 @@ image: node:11
 pages:
   stage: deploy
   script:
-  - npm install
-  - npm install -g @angular/cli
-  - ng build --prod --aot
-  - cp -t dist/ prerender.css
-  - mv dist/ public/
-  - cp public/index.html public/404.html
-  - apt-get update -y && apt-get install python-pip python-yaml -y
-  - pip install awscli
-  - aws s3 sync ./public/ s3://overtrack-web --delete
-  - aws configure set preview.cloudfront true
-  - aws cloudfront create-invalidation --distribution-id E3CTY1YXR7BPIY --paths "/*"
+    - npm install
+    - npm install -g @angular/cli
+    - ng build --prod --aot
+    - cp -t dist/ prerender.css
+    - mv dist/ public/
+    - cp public/index.html public/404.html
+    - apt-get update -y && apt-get install python-pip python-yaml -y
+    - pip install awscli
+    - aws s3 sync ./public/ s3://overtrack-web --delete
+    - aws configure set preview.cloudfront true
+    - aws cloudfront create-invalidation --distribution-id E3CTY1YXR7BPIY --paths "/*"
   artifacts:
     paths:
-    - public
+      - public
   only:
-  - master
+    - master
